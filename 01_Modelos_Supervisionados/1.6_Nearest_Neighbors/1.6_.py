@@ -1,0 +1,11 @@
+########## 1.6 Nearest Neighbors - Vizinhos Próximos ##########
+
+    # sklearn.neighbors fornece funcionalidade para métodos de aprendizagem baseados em vizinhos não supervisionados e supervisionados. Vizinhos mais próximos não supervisionados é a base de muitos outros métodos de aprendizado, notavelmente aprendizado múltiplo e agrupamento espectral. O aprendizado supervisionado baseado em vizinhos vem em dois sabores: classificação para dados com rótulos discretos e regressão para dados com rótulos contínuos.
+
+    # O princípio por trás dos métodos de vizinho mais próximo é encontrar um número predefinido de amostras de treinamento mais próximas em distância do novo ponto e prever o rótulo a partir deles. O número de amostras pode ser uma constante definida pelo usuário (aprendizado de k-vizinho mais próximo) ou variar com base na densidade local de pontos (aprendizado de vizinho baseado em raio). A distância pode, em geral, ser qualquer medida métrica: a distância euclidiana padrão é a escolha mais comum. Os métodos baseados em vizinhos são conhecidos como métodos de aprendizado de máquina não generalizantes, uma vez que eles simplesmente “lembram” todos os seus dados de treinamento (possivelmente transformados em uma estrutura de indexação rápida como uma Ball Tree ou KD Tree).
+
+    # Apesar de sua simplicidade, os vizinhos mais próximos tiveram sucesso em um grande número de problemas de classificação e regressão, incluindo dígitos manuscritos e cenas de imagens de satélite. Por ser um método não paramétrico, costuma ser bem-sucedido em situações de classificação em que o limite de decisão é muito irregular.
+
+    # As classes em sklearn.neighbors podem lidar com matrizes NumPy ou matrizes scipy.sparse como entrada. Para matrizes densas, um grande número de métricas de distância possíveis é suportado. Para matrizes esparsas, as métricas arbitrárias de Minkowski são suportadas para pesquisas.
+
+    # Existem muitas rotinas de aprendizagem que dependem dos vizinhos mais próximos em seu núcleo. Um exemplo é a estimativa da densidade do kernel, discutida na seção de estimativa da densidade. 
