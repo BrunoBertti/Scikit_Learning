@@ -10,3 +10,22 @@
 
 
     # A medida de complexidade de custo de um único nó é R_ \ alpha (t) = R (t) + \ alpha. O ramo, T_t, é definido como uma árvore em que o nó t é sua raiz. Em geral, a impureza de um nó é maior do que a soma das impurezas de seus nós terminais, R (T_t) <R (t). No entanto, a medida de complexidade de custo de um nó, t, e seu ramo, T_t, podem ser iguais dependendo de \ alpha. Definimos o \ alpha efetivo de um nó como o valor onde eles são iguais, R_ \ alpha (T_t) = R_ \ alpha (t) ou \ alpha_ {eff} (t) = \ frac {R (t) -R (T_t)} {| T | -1}. Um nó não terminal com o menor valor de \ alpha_ {eff} é o elo mais fraco e será removido. Este processo para quando o \ alpha_ {eff} mínimo da árvore podada é maior do que o parâmetro ccp_alpha. 
+
+
+    ## Exemplos:
+
+    ## https://scikit-learn.org/stable/auto_examples/tree/plot_cost_complexity_pruning.html#sphx-glr-auto-examples-tree-plot-cost-complexity-pruning-py
+
+
+
+    ## Referências:
+ 
+    ## L. Breiman, J. Friedman, R. Olshen, and C. Stone. Classification and Regression Trees. Wadsworth, Belmont, CA, 1984.
+
+    ## https://en.wikipedia.org/wiki/Decision_tree_learning
+
+    ## https://en.wikipedia.org/wiki/Predictive_analytics
+
+    ## J.R. Quinlan. C4. 5: programs for machine learning. Morgan Kaufmann, 1993.
+
+    ## T. Hastie, R. Tibshirani and J. Friedman. Elements of Statistical Learning, Springer, 2009.
