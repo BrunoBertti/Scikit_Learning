@@ -1,0 +1,6 @@
+########## 1.16. Calibração de Probabilidade ##########
+
+
+    # Ao realizar a classificação, você geralmente deseja não apenas prever o rótulo da classe, mas também obter uma probabilidade do respectivo rótulo. Essa probabilidade dá a você algum tipo de confiança na previsão. Alguns modelos podem fornecer estimativas ruins das probabilidades da classe e alguns até não suportam a previsão de probabilidade (por exemplo, algumas instâncias de SGDClassifier). O módulo de calibração permite calibrar melhor as probabilidades de um determinado modelo ou adicionar suporte para previsão de probabilidade.
+
+    # Classificadores bem calibrados são classificadores probabilísticos para os quais a saída do método predict_proba pode ser interpretada diretamente como um nível de confiança. Por exemplo, um classificador bem calibrado (binário) deve classificar as amostras de tal forma que, entre as amostras para as quais deu um valor predict_proba próximo a 0,8, aproximadamente 80% realmente pertencem à classe positiva. 
