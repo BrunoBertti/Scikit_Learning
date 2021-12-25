@@ -1,0 +1,3 @@
+########## 1.17. Modelos de rede neural (supervisionados) ##########
+
+    # Aviso: esta implementação não se destina a aplicativos de grande escala. Em particular, o scikit-learn não oferece suporte para GPU. Para obter implementações baseadas em GPU muito mais rápidas, bem como estruturas que oferecem muito mais flexibilidade para construir arquiteturas de aprendizado profundo, consulte Projetos relacionados. 
