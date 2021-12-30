@@ -1,0 +1,9 @@
+########## 2.2.10. Dicas de uso prático  ##########
+
+    # Certifique-se de que a mesma escala seja usada em todos os recursos. Como os métodos de aprendizagem múltiplos são baseados em uma pesquisa do vizinho mais próximo, o algoritmo pode ter um desempenho insatisfatório de outra forma. Consulte StandardScaler para maneiras convenientes de dimensionar dados heterogêneos.
+
+    # O erro de reconstrução calculado por cada rotina pode ser usado para escolher a dimensão de saída ideal. Para uma variedade d-dimensional embutida em um espaço de parâmetro D-dimensional, o erro de reconstrução diminuirá à medida que n_components for aumentado até n_components == d.
+
+    # Observe que dados barulhentos podem “causar curto-circuito” no coletor, basicamente atuando como uma ponte entre as partes do coletor que, de outra forma, estariam bem separadas. A aprendizagem múltipla em dados ruidosos e / ou incompletos é uma área ativa de pesquisa.
+
+    # Certas configurações de entrada podem levar a matrizes de peso singulares, por exemplo, quando mais de dois pontos no conjunto de dados são idênticos ou quando os dados são divididos em grupos separados. Nesse caso, solver = 'arpack' não conseguirá encontrar o espaço nulo. A maneira mais fácil de resolver isso é usar solver = 'dense', que funcionará em uma matriz singular, embora possa ser muito lento dependendo do número de pontos de entrada. Alternativamente, pode-se tentar entender a fonte da singularidade: se for devido a conjuntos disjuntos, aumentar n_neighbors pode ajudar. Se for devido a pontos idênticos no conjunto de dados, remover esses pontos pode ajudar. 
