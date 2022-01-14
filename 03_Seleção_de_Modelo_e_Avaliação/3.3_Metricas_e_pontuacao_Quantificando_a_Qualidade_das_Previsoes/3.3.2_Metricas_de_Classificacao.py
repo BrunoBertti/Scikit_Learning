@@ -499,15 +499,77 @@ metrics.precision_score(y_true, y_pred, labels=[0, 1, 2, 3], average='macro')
 ##### 3.3.2.10. Pontuação do coeficiente de similaridade de Jaccard
 
 
+    # A função jaccard_score calcula a média dos coeficientes de similaridade de Jaccard, também chamado de índice de Jaccard, entre pares de conjuntos de rótulos.
+
+    # O coeficiente de similaridade de Jaccard das i-ésimas amostras, com um conjunto de rótulos de verdade y_i e conjunto de rótulos previsto \hat{y}_i, é definido como
+
+    # J(y_i, \hat{y}_i) = \frac{|y_i \cap \hat{y}_i|}{|y_i \cup \hat{y}_i|}.
+
+    # jaccard_score funciona como precision_recall_fscore_support como uma medida ingenuamente definida aplicada nativamente a alvos binários e estendida para aplicar a multilabel e multiclass através do uso de média (veja acima).
+
+    # No caso binário: 
+
+import numpy as np
+from sklearn.metrics import jaccard_score
+y_true = np.array([[0, 1, 1], [1, 1, 0]])
+y_pred = np.array([[1, 1, 1], [1, 0, 0]])
+jaccard_score(y_true[0], y_pred)
 
 
+    # No caso multilabel com indicadores de rótulo binário: 
 
+jaccard_score(y_true, y_pred, average='samples')
+jaccard_score(y_true, y_pred, average='macro')
+jaccard_score(y_true, y_pred, average=N)
 
+    # Problemas multiclasse são binarizados e tratados como o problema multirótulo correspondente: 
+
+y_pred = [0, 2, 1, 2]
+y_true = [0, 1, 2, 2]
+jaccard_score(y_true, y_pred, average=None)
+jaccard_score(y_true, y_pred, average='macro')
+jaccard_score(y_true, y_pred, average='mic')
 
 ##### 3.3.2.11. Perda da dobradiça
 
+    # A função de perda de dobradiça calcula a distância média entre o modelo e os dados usando a perda de dobradiça, uma métrica unilateral que considera apenas os erros de previsão. (A perda de dobradiça é usada em classificadores de margem máxima, como máquinas de vetor de suporte.)
+
+    # Se os rótulos forem codificados com +1 e -1, y: é o valor verdadeiro e w são as decisões previstas como saída pela função_decisão, então a perda de dobradiça é definida como: 
+
+        # L_\text{Hinge}(y, w) = \max\left\{1 - wy, 0\right\} = \left|1 - wy\right|_+
 
 
+    # Se houver mais de dois rótulos, a dobradiça_loss usa uma variante multiclasse devido a Crammer & Singer. Aqui está o papel que o descreve.
+
+    # Se y_w é a decisão prevista para rótulo verdadeiro e y_t é o máximo das decisões previstas para todos os outros rótulos, onde as decisões previstas são emitidas pela função de decisão, então a perda de dobradiça multiclasse é definida por: 
+
+        # L_\text{Hinge}(y_w, y_t) = \max\left\{1 + y_t - y_w, 0\right\}
+
+    # Aqui um pequeno exemplo demonstrando o uso da função dobradiça_loss com um classificador svm em um problema de classe binária: 
+
+from sklearn import svm
+from sklearn.metrics import hinge_loss
+X = [[0], [1]]
+y = [-1, 1]
+est = svm.LinearSVC(random_state=0)
+est.fit(X, y)
+LinearSVC(random_state=0)
+pred_decision = est.decision_function([[-2], [3], [0.5]])
+pred_decision
+hinge_loss([-1, 1, 1], pred_decision)
+
+
+    # Aqui está um exemplo demonstrando o uso da função dobradiça_loss com um classificador svm em um problema multiclasse: 
+
+X = np.array([[0], [1], [2], [3]])
+Y = np.array([0, 1, 2, 3])
+labels = np.array([0, 1, 2, 3])
+est = svm.LinearSVC()
+est.fit(X, Y)
+LinearSVC()
+pred_decision = est.decision_function([[-1], [2], [3]])
+y_true = [0, 2, 3]
+hinge_loss(y_true, pred_decision, labels=labels)
 
 
 
