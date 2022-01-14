@@ -95,17 +95,125 @@ y_true = [[0.5, 1], [-1, 1], [7, -6]]
 y_pred = [[0, 2], [-1, 2], [8, -5]]
 mean_squared_error(y_true, y_pred)
 
+
+
+    ## Exemplos:
+
+    ## See Gradient Boosting regression for an example of mean squared error usage to evaluate gradient boosting regression. (https://scikit-learn.org/stable/auto_examples/ensemble/plot_gradient_boosting_regression.html#sphx-glr-auto-examples-ensemble-plot-gradient-boosting-regression-py)
+
+
+
 ##### 3.3.4.5. Erro logarítmico quadrado médio
+
+    # A função mean_squared_log_error calcula uma métrica de risco correspondente ao valor esperado do erro ou perda logarítmica quadrada (quadrática).
+
+    # Se \hat{y}_i é o valor previsto da i-ésima amostra, e y_i é o valor verdadeiro correspondente, então o erro logarítmico quadrático médio (MSLE) estimado em n_{\text{amostras}} é definido como 
+
+        # \text{MSLE}(y, \hat{y}) = \frac{1}{n_\text{samples}} \sum_{i=0}^{n_\text{samples} - 1} (\log_e (1 + y_i) - \log_e (1 + \hat{y}_i) )^2.
+
+    # Onde \log_e (x) significa o logaritmo natural de x. Essa métrica é melhor para usar quando as metas têm crescimento exponencial, como contagens de população, vendas médias de uma mercadoria ao longo de um período de anos etc. Observe que essa métrica penaliza uma estimativa subestimada maior do que uma estimativa superestimada.
+
+    # Aqui está um pequeno exemplo de uso da função mean_squared_log_error: 
+
+from sklearn.metrics import mean_squared_log_error
+y_true = [3, 5, 2.5, 7]
+y_pred = [2.5, 5, 4, 8]
+mean_squared_log_error(y_true, y_pred)
+y_true = [[0.5, 1], [1, 2], [7, 6]]
+y_pred = [[0.5, 2], [1, 2.5], [8, 8]]
+mean_squared_log_error(y_true, y_pred)
+
+
+
+
 
 ##### 3.3.4.6. Erro percentual absoluto médio
 
+
+    # O mean_absolute_percentage_error (MAPE), também conhecido como desvio percentual absoluto médio (MAPD), é uma métrica de avaliação para problemas de regressão. A ideia dessa métrica é ser sensível a erros relativos. Por exemplo, não é alterado por uma escala global da variável de destino.
+
+    # Se \hat{y}_i é o valor previsto da i-ésima amostra e y_i é o valor verdadeiro correspondente, então o erro percentual médio absoluto (MAPE) estimado sobre n_{\text{amostras}} é definido como 
+
+
+        # \text{MAPE}(y, \hat{y}) = \frac{1}{n_{\text{samples}}} \sum_{i=0}^{n_{\text{samples}}-1} \frac{{}\left| y_i - \hat{y}_i \right|}{max(\epsilon, \left| y_i \right|)}
+
+
+
+    # onde \epsilon é um número arbitrário pequeno mas estritamente positivo para evitar resultados indefinidos quando y é zero.
+
+    # A função mean_absolute_percentage_error suporta saída múltipla.
+
+    # Aqui está um pequeno exemplo de uso da função mean_absolute_percentage_error: 
+
+from sklearn.metrics import mean_absolute_percentage_error
+y_true = [1, 10, 1e6]
+y_pred = [0.9, 15, 1.2e6]
+mean_absolute_percentage_error(y_true, y_pred)
+
+
+    # No exemplo acima, se tivéssemos usado mean_absolute_error, ele teria ignorado os valores de pequena magnitude e refletido apenas o erro na previsão do valor de maior magnitude. Mas esse problema é resolvido no caso do MAPE porque calcula o erro percentual relativo em relação à saída real. 
+
+
+
 ##### 3.3.4.7. Erro absoluto mediano
+
+
+    # O median_absolute_error é particularmente interessante porque é robusto a valores discrepantes. A perda é calculada tomando a mediana de todas as diferenças absolutas entre a meta e a previsão.
+
+    # Se \hat{y}_i é o valor previsto da i-ésima amostra e y_i é o valor verdadeiro correspondente, então o erro médio absoluto (MedAE) estimado sobre n_{\text{amostras}} é definido como 
+
+        # \text{MedAE}(y, \hat{y}) = \text{median}(\mid y_1 - \hat{y}_1 \mid, \ldots, \mid y_n - \hat{y}_n \mid).
+
+    # O median_absolute_error não suporta saídas múltiplas.
+
+    # Aqui está um pequeno exemplo de uso da função median_absolute_error: 
+
+from sklearn.metrics import median_absolute_error
+y_true = [3, -0.5, 2, 7]
+y_pred = [2.5, 0.0, 2, 8]
+median_absolute_error(y_true, y_pred)
+
+
+
 
 ##### 3.3.4.8. R² score, o coeficiente de determinação
 
+
+
+
+
+
+
+
+
+
+
+
 ##### 3.3.4.9. Desvios médios de Poisson, Gamma e Tweedie
 
+
+
+
+
+
+
+
+
+
+
+
 ##### 3.3.4.10. Pontuação D², o coeficiente de determinação
+
+
+
+
+
+
+
+
+
+
+
 
 ##### 3.3.4.11. Perda de pinball 
 
