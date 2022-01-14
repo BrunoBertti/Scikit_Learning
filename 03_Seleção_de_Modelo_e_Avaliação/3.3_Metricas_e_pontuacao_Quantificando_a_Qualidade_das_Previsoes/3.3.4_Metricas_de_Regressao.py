@@ -178,12 +178,41 @@ median_absolute_error(y_true, y_pred)
 
 ##### 3.3.4.8. R² score, o coeficiente de determinação
 
+    # A função r2_score calcula o coeficiente de determinação, geralmente denotado como R².
+
+    # Representa a proporção da variância (de y) que foi explicada pelas variáveis independentes no modelo. Ele fornece uma indicação da qualidade do ajuste e, portanto, uma medida de quão bem as amostras não vistas provavelmente serão previstas pelo modelo, por meio da proporção da variância explicada.
+
+    # Como essa variação depende do conjunto de dados, o R² pode não ser significativamente comparável em diferentes conjuntos de dados. A melhor pontuação possível é 1,0 e pode ser negativa (porque o modelo pode ser arbitrariamente pior). Um modelo constante que sempre prevê o valor esperado de y, desconsiderando os recursos de entrada, obteria uma pontuação R² de 0,0.
+
+    # Se \hat{y}_i for o valor previsto da i-ésima amostra e y_i for o valor verdadeiro correspondente para o total de n amostras, o R² estimado é definido como: 
 
 
+        # R^2(y, \hat{y}) = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
 
 
+    # onde \bar{y} = \frac{1}{n} \sum_{i=1}^{n} y_i e \sum_{i=1}^{n} (y_i - \hat{y}_i)^ 2 = \sum_{i=1}^{n} \epsilon_i^2.
+
+    # Observe que r2_score calcula R² não ajustado sem corrigir o viés na variância amostral de y.
+
+    # Aqui está um pequeno exemplo de uso da função r2_score: 
+
+from sklearn.metrics import r2_score
+y_true = [3, -0.5, 2, 7]
+y_pred = [2.5, 0.0, 2, 8]
+r2_score(y_true, y_pred)
+y_true = [[0.5, 1], [-1, 1], [7, -6]]
+y_pred = [[0, 2], [-1, 2], [8, -5]]
+r2_score(y_true, y_pred, multioutput='variance_weighted')
+y_true = [[0.5, 1], [-1, 1], [7, -6]]
+y_pred = [[0, 2], [-1, 2], [8, -5]]
+r2_score(y_true, y_pred, multioutput='uniform_average')
+r2_score(y_true, y_pred, multioutput='raw_values')
+r2_score(y_true, y_pred, multioutput=[0.3, 0.7])
 
 
+    ## Exemplos:
+
+    ## See Lasso and Elastic Net for Sparse Signals for an example of R² score usage to evaluate Lasso and Elastic Net on sparse signals. (https://scikit-learn.org/stable/auto_examples/linear_model/plot_lasso_and_elasticnet.html#sphx-glr-auto-examples-linear-model-plot-lasso-and-elasticnet-py)
 
 
 
