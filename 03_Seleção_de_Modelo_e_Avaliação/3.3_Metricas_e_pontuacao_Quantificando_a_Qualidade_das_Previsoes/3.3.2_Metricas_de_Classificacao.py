@@ -221,35 +221,305 @@ cohen_kappa_score(y_true, y_pred)
 
 ##### 3.3.2.6. Matriz de confusão
 
+    # A função confusion_matrix avalia a precisão da classificação calculando a matriz de confusão com cada linha correspondente à classe verdadeira (a Wikipédia e outras referências podem usar convenções diferentes para eixos).
+
+    # Por definição, a entrada i, j em uma matriz de confusão é o número de observações realmente no grupo i, mas previsto para estar no grupo j. Aqui está um exemplo: 
+
+from sklearn.metrics import confusion_matrix
+y_true = [2, 0, 2, 2, 0, 1]
+y_pred = [0, 0, 2, 2, 0, 2]
+confusion_matrix(y_true, y_pred)
+
+
+    # ConfusionMatrixDisplay pode ser usado para representar visualmente uma matriz de confusão, conforme mostrado no exemplo da matriz de confusão, que cria a seguinte figura: 
+
+
+        # https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
+
+    # O parâmetro normalize permite relatar proporções em vez de contagens. A matriz de confusão pode ser normalizada de 3 maneiras diferentes: 'pred', 'true' e 'all', que dividirá as contagens pela soma de cada coluna, linha ou toda a matriz, respectivamente. 
+
+y_true = [0, 0, 0, 1, 1, 1, 1, 1]
+y_pred = [0, 1, 0, 1, 0, 1, 0, 1]
+confusion_matrix(y_true, y_pred, normalize='all')
+
+    # Para problemas binários, podemos obter contagens de verdadeiros negativos, falsos positivos, falsos negativos e verdadeiros positivos da seguinte forma: 
+
+y_true = [0, 0, 0, 1, 1, 1, 1, 1]
+y_pred = [0, 1, 0, 1, 0, 1, 0, 1]
+tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
+tn, fp, fn, tp
+
+    
+
+    ## Exemplos:
+    ## See Confusion matrix for an example of using a confusion matrix to evaluate classifier output quality. (https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py)
+
+    ## See Recognizing hand-written digits for an example of using a confusion matrix to classify hand-written digits. (https://scikit-learn.org/stable/auto_examples/classification/plot_digits_classification.html#sphx-glr-auto-examples-classification-plot-digits-classification-py)
+
+    ## See Classification of text documents using sparse features for an example of using a confusion matrix to classify text documents. (https://scikit-learn.org/stable/auto_examples/text/plot_document_classification_20newsgroups.html#sphx-glr-auto-examples-text-plot-document-classification-20newsgroups-py) 
+
+
 
 
 
 ##### 3.3.2.7. Relatório de classificação
 
+    # A função class_report cria um relatório de texto mostrando as principais métricas de classificação. Aqui está um pequeno exemplo com target_names personalizados e rótulos inferidos: 
 
+from sklearn.metrics import classification_report
+y_true = [0, 1, 2, 2, 0]
+y_pred = [0, 0, 2, 1, 0]
+target_names = ['class 0', 'class 1', 'class 2']
+print(classification_report(y_true, y_pred, target_names=target_names))
+
+
+    ## Exemplos:
+
+    ## See Recognizing hand-written digits for an example of classification report usage for hand-written digits. (https://scikit-learn.org/stable/auto_examples/classification/plot_digits_classification.html#sphx-glr-auto-examples-classification-plot-digits-classification-py)
+
+    ## See Classification of text documents using sparse features for an example of classification report usage for text documents. (https://scikit-learn.org/stable/auto_examples/text/plot_document_classification_20newsgroups.html#sphx-glr-auto-examples-text-plot-document-classification-20newsgroups-py)
+
+    ## See Parameter estimation using grid search with cross-validation for an example of classification report usage for grid search with nested cross-validation. (https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py)    
 
 
 ##### 3.3.2.8. Perda de Hamming
 
 
+    # O hamming_loss calcula a perda de Hamming média ou a distância de Hamming entre dois conjuntos de amostras.
+
+    # Se \hat{y}_j for o valor previsto para o j-ésimo rótulo de uma determinada amostra, y_j for o valor verdadeiro correspondente e n_\text{labels} for o número de classes ou rótulos, então a perda de Hamming L_{ Hamming} entre duas amostras é definido como:
+
+        # L_{Hamming}(y, \hat{y}) = \frac{1}{n_\text{labels}} \sum_{j=0}^{n_\text{labels} - 1} 1(\hat{y}_j \not= y_j)
+
+    # onde 1(x) é a função indicadora. 
+
+from sklearn.metrics import hamming_loss
+y_pred = [1, 2, 3, 4]
+y_true = [2, 2, 3, 4]
+hamming_loss(y_true, y_pred)
+
+    # No caso multilabel com indicadores de rótulo binário: 
+
+hamming_loss(np.array([[0, 1], [1, 1]]), np.zeros((2, 2)))
+
+    # Nota: Na classificação multiclasse, a perda de Hamming corresponde à distância de Hamming entre y_true e y_pred que é semelhante à função Zero uma perda. No entanto, enquanto a perda zero-um penaliza conjuntos de previsão que não correspondem estritamente a conjuntos verdadeiros, a perda de Hamming penaliza rótulos individuais. Assim, a perda de Hamming, limitada superiormente pela perda zero-um, está sempre entre zero e um, inclusive; e prever um subconjunto ou superconjunto adequado dos rótulos verdadeiros dará uma perda de Hamming entre zero e um, exclusivo 
 
 
 
 ##### 3.3.2.9. Precisão, recall e medidas F
 
+    # Intuitivamente, precisão é a habilidade do classificador de não rotular como positiva uma amostra que é negativa, e recall é a habilidade do classificador de encontrar todas as amostras positivas.
 
+    # A medida F (medidas F_\beta e F_1) pode ser interpretada como uma média harmônica ponderada da precisão e do recall. Uma medida F_\beta atinge seu melhor valor em 1 e sua pior pontuação em 0. Com \beta = 1, F_\beta e F_1 são equivalentes, e o recall e a precisão são igualmente importantes.
+
+    # A precisão_recall_curve calcula uma curva de precisão-recall a partir do rótulo de verdade e uma pontuação dada pelo classificador variando um limite de decisão.
+
+    # A função average_precision_score calcula a precisão média (AP) das pontuações de previsão. O valor está entre 0 e 1 e maior é melhor. AP é definido como
+
+        # \text{AP} = \sum_n (R_n - R_{n-1}) P_n
+
+    # onde P_n e R_n são a precisão e a rechamada no enésimo limiar. Com previsões aleatórias, o AP é a fração de amostras positivas.
+
+    # As referências [Manning2008] e [Everingham2010] apresentam variantes alternativas de AP que interpolam a curva de precisão-recall. Atualmente, average_precision_score não implementa nenhuma variante interpolada. As referências [Davis2006] e [Flach2015] descrevem por que uma interpolação linear de pontos na curva de recuperação de precisão fornece uma medida excessivamente otimista do desempenho do classificador. Esta interpolação linear é usada ao calcular a área sob a curva com a regra trapezoidal em auc.
+
+    # Várias funções permitem analisar a precisão, o recall e a pontuação das medidas F: 
+
+
+        # average_precision_score(y_true, y_score, *) Calcular a precisão média (AP) das pontuações de previsão.
+
+        # f1_score(y_true, y_pred, *[, labels, ...]) Calcule a pontuação F1, também conhecida como F-score balanceado ou F-measure.
+
+        # fbeta_score(y_true, y_pred, *, beta[, ...]) Calcule a pontuação F-beta.
+
+        # precision_recall_curve(y_true, probas_pred, *) Calcular pares de precisão-recall para diferentes limites de probabilidade.
+
+        # precision_recall_fscore_support(y_true, ...) Precisão de cálculo, recall, F-measure e suporte para cada
+
+        # precision_score(y_true, y_pred, *[, labels, ...]) Calcule a precisão.
+
+        # recall_score(y_true, y_pred, *[, labels, ...]) Calcular o recall. 
+
+
+    # Observe que a função precision_recall_curve é restrita ao caso binário. A função average_precision_score funciona apenas na classificação binária e no formato de indicador multilabel. As funções PredictionRecallDisplay.from_estimator e PredictionRecallDisplay.from_predictions plotarão a curva de recuperação de precisão da seguinte maneira. 
+
+        # https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html#plot-the-precision-recall-curve
+
+
+
+
+    ## Exemplos:
+
+    ## See Classification of text documents using sparse features for an example of f1_score usage to classify text documents. (https://scikit-learn.org/stable/auto_examples/text/plot_document_classification_20newsgroups.html#sphx-glr-auto-examples-text-plot-document-classification-20newsgroups-py)
+
+    ## See Parameter estimation using grid search with cross-validation for an example of precision_score and recall_score usage to estimate parameters using grid search with nested cross-validation. (https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py)
+
+    ## See Precision-Recall for an example of precision_recall_curve usage to evaluate classifier output quality. (https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html#sphx-glr-auto-examples-model-selection-plot-precision-recall-py)
+
+
+
+
+    ## Referências:
+
+    ## Manning2008 C.D. Manning, P. Raghavan, H. Schütze, Introduction to Information Retrieval, 2008. (https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-ranked-retrieval-results-1.html)
+
+    ## Everingham2010 M. Everingham, L. Van Gool, C.K.I. Williams, J. Winn, A. Zisserman, The Pascal Visual Object Classes (VOC) Challenge, IJCV 2010. (http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.157.5766&rep=rep1&type=pdf)
+
+    ## Davis2006 J. Davis, M. Goadrich, The Relationship Between Precision-Recall and ROC Curves, ICML 2006. (https://www.biostat.wisc.edu/~page/rocpr.pdf)
+
+    ## Flach2015 P.A. Flach, M. Kull, Precision-Recall-Gain Curves: PR Analysis Done Right, NIPS 2015. (https://papers.nips.cc/paper/5867-precision-recall-gain-curves-pr-analysis-done-right.pdf)
 
 
 
 ##### 3.3.2.9.1. Classificação binária
 
+    # Em uma tarefa de classificação binária, os termos “positivo” e “negativo” referem-se à previsão do classificador, e os termos “verdadeiro” e “falso” referem-se a se essa previsão corresponde ao julgamento externo ( às vezes conhecido como a ''observação''). Dadas essas definições, podemos formular a seguinte tabela: 
+
+
+
+#                               Aula real (observação) 
+#
+#
+# Classe prevista           tp (verdadeiro positivo)        fp (falso positivo)
+# (expectativa)             Resultado correto               Resultado inesperado 
+#
+#                           fn (falso negativo)             tn (verdadeiro negativo)
+#                           Resultado ausente               Ausência correta de resultado 
+#
+
+
+    # Neste contexto, podemos definir as noções de precisão, recall e F-measure: 
+
+
+        # \text{precision} = \frac{tp}{tp + fp},
+
+
+        # \text{recall} = \frac{tp}{tp + fn},
+
+
+        # F_\beta = (1 + \beta^2) \frac{\text{precision} \times \text{recall}}{\beta^2 \text{precision} + \text{recall}}.
+
+
+
+    # Aqui estão alguns pequenos exemplos de classificação binária: 
+
+from sklearn import metrics
+y_pred = [0, 1, 0, 0]
+y_true = [0, 1, 0, 1]
+metrics.precision_score(y_true, y_pred)
+metrics.recall_score(y_true, y_pred)
+
+metrics.f1_score(y_true, y_pred)
+
+metrics.fbeta_score(y_true, y_pred, beta=0.5)
+
+metrics.fbeta_score(y_true, y_pred, beta=1)
+
+metrics.fbeta_score(y_true, y_pred, beta=2)
+
+metrics.precision_recall_fscore_support(y_true, y_pred, beta=0.5)
+
+
+
+
+import numpy as np
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import average_precision_score
+y_true = np.array([0, 0, 1, 1])
+y_scores = np.array([0.1, 0.4, 0.35, 0.8])
+precision, recall, threshold = precision_recall_curve(y_true, y_scores)
+precision
+recall
+threshold
+average_precision_score(y_true, y_scores)
+
+
+
+
 ##### 3.3.2.9.2. Classificação multiclasse e multirótulo
+
+    # Na tarefa de classificação multiclasse e multirótulo, as noções de precisão, rechamada e medidas F podem ser aplicadas a cada rótulo independentemente. Existem algumas maneiras de combinar resultados entre rótulos, especificados pelo argumento average para as funções average_precision_score (somente multilabel), f1_score, fbeta_score, precision_recall_fscore_support, precision_score e recall_score, conforme descrito acima. Observe que, se todos os rótulos forem incluídos, a média “micro” em uma configuração multiclasse produzirá precisão, rechamada e F que são todos idênticos à exatidão. Observe também que a média “ponderada” pode produzir um F-score que não está entre precisão e recuperação. 
+
+    # Para tornar isso mais explícito, considere a seguinte notação: 
+
+        # y o conjunto de pares previstos (amostra, rótulo)
+
+
+        # \hat{y} o conjunto de pares verdadeiros (amostra, rótulo)
+
+        # L o conjunto de rótulos
+
+        # S o conjunto de amostras
+
+
+        # y_s o subconjunto de y com amostra s, ou seja, y_s := \left\{(s', l) \in y | s' = s\direita\}
+
+
+        # y_l o subconjunto de y com rótulo l
+
+        # da mesma forma, \hat{y}_s e \hat{y}_l são subconjuntos de \hat{y}
+
+
+        # P(A, B) := \frac{\esquerda| A \cap B \right|}{\left|A\right|} para alguns conjuntos A e B
+
+
+        # R(A, B) := \frac{\esquerda| A \cap B \right|}{\left|B\right|} (As convenções variam no tratamento de B = \emptyset; esta implementação usa R(A, B):=0 e similar para P.)
+
+        # F_\beta(A, B) := \left(1 + \beta^2\right) \frac{P(A, B) \times R(A, B)}{\beta^2 P(A, B) ) + R(A, B)} 
+
+
+    # Então as métricas são definidas como: 
+
+
+        ########## TABELA #########
+
+
+from sklearn import metrics
+y_true = [0, 1, 2, 0, 1, 2]
+y_pred = [0, 2, 1, 0, 0, 1]
+metrics.precision_score(y_true, y_pred, average='macro')
+metrics.recall_score(y_true, y_pred, average='micro')
+metrics.f1_score(y_true, y_pred, average='weighted')
+metrics.fbeta_score(y_true, y_pred, average='macro', beta=0.5)
+metrics.precision_recall_fscore_support(y_true, y_pred, beta=0.5, average=None)
+
+
+    # Para classificação multiclasse com “classe negativa”, é possível excluir alguns rótulos: 
+
+metrics.recall_score(y_true, y_pred, labels=[1, 2], average='micro')
+# excluindo 0, nenhum rótulo foi recuperado corretamente 
+
+    # Da mesma forma, rótulos não presentes na amostra de dados podem ser considerados na média macro.
+
+metrics.precision_score(y_true, y_pred, labels=[0, 1, 2, 3], average='macro')
+
+
+
+
 
 ##### 3.3.2.10. Pontuação do coeficiente de similaridade de Jaccard
 
+
+
+
+
+
+
 ##### 3.3.2.11. Perda da dobradiça
 
+
+
+
+
+
+
 ##### 3.3.2.12. Perda de registro
+
+
+
+
+
+
+
 
 ##### 3.3.2.13. Coeficiente de correlação de Matthews
 
