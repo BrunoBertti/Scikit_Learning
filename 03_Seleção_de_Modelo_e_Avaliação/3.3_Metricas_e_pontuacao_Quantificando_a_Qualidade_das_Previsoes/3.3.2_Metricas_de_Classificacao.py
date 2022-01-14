@@ -577,10 +577,27 @@ hinge_loss(y_true, pred_decision, labels=labels)
 ##### 3.3.2.12. Perda de registro
 
 
+    # A perda de log, também chamada de perda de regressão logística ou perda de entropia cruzada, é definida em estimativas de probabilidade. É comumente usado em regressão logística (multinomial) e redes neurais, bem como em algumas variantes de maximização de expectativa, e pode ser usado para avaliar as saídas de probabilidade (predict_proba) de um classificador em vez de suas previsões discretas.
+
+    # Para classificação binária com um rótulo verdadeiro y \in \{0,1\} e uma estimativa de probabilidade p = \operatorname{Pr}(y = 1), a perda logarítmica por amostra é a probabilidade logarítmica negativa do classificador dado o rótulo verdadeiro: 
+
+        # L_{\log}(y, p) = -\log \operatorname{Pr}(y|p) = -(y \log (p) + (1 - y) \log (1 - p))
 
 
+    # Isso se estende ao caso multiclasse da seguinte maneira. Deixe que os rótulos verdadeiros para um conjunto de amostras sejam codificados como uma matriz indicadora binária Y de 1 de K, ou seja, y_{i,k} = 1 se a amostra i tiver o rótulo k retirado de um conjunto de K rótulos. Seja P uma matriz de estimativas de probabilidade, com p_{i,k} = \operatorname{Pr}(y_{i,k} = 1). Então a perda de log de todo o conjunto é 
 
+        # L_{\log}(Y, P) = -\log \operatorname{Pr}(Y|P) = - \frac{1}{N} \sum_{i=0}^{N-1} \sum_{k=0}^{K-1} y_{i,k} \log p_{i,k}
 
+    # Para ver como isso generaliza a perda de log binário fornecida acima, observe que, no caso binário, p_{i,0} = 1 - p_{i,1} e y_{i,0} = 1 - y_{i,1} , então expandir a soma interna sobre y_{i,k} \in \{0,1\} dá a perda de log binário.
+
+    # A função log_loss calcula a perda de log dada uma lista de rótulos de verdade e uma matriz de probabilidade, conforme retornado pelo método predict_proba de um estimador. 
+
+from sklearn.metrics import log_loss
+y_true = [0, 0, 1, 1]
+y_pred = [[.9, .1], [.8, .2], [.3, .7], [.01, .99]]
+log_loss(y_true, y_pred)
+
+    # O primeiro [.9, .1] em y_pred denota 90% de probabilidade de que a primeira amostra tenha o rótulo 0. A perda de log não é negativa. 
 
 
 ##### 3.3.2.13. Coeficiente de correlação de Matthews
