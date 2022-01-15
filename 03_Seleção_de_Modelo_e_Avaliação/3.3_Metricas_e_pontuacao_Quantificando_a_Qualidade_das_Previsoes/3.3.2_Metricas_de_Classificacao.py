@@ -883,12 +883,33 @@ roc_auc_score(y, y_score, average=None)
 ##### 3.3.2.17. Zero uma perda
 
 
+    # A função zero_one_loss calcula a soma ou a média da perda de classificação 0-1 (L_{0-1}) sobre n_{\text{samples}}. Por padrão, a função normaliza sobre a amostra. Para obter a soma de L_{0-1}, defina normalize como False.
+
+    # Na classificação multirrótulo, o zero_one_loss pontua um subconjunto como um se seus rótulos corresponderem estritamente às previsões e como zero se houver algum erro. Por padrão, a função retorna a porcentagem de subconjuntos previstos de forma imperfeita. Para obter a contagem de tais subconjuntos, defina normalize para False
+
+    # Se \hat{y}_i for o valor previsto da i-ésima amostra e y_i for o valor verdadeiro correspondente, então a perda 0-1 L_{0-1} é definida como: 
+
+        # L_{0-1}(y_i, \hat{y}_i) = 1(\hat{y}_i \not= y_i)
+
+    # onde 1(x) é a função indicadora. 
+
+from sklearn.metrics import zero_one_loss
+y_pred = [1, 2, 3, 4]
+y_true = [2, 2, 3, 4]
+zero_one_loss(y_true, y_pred)
+
+zero_one_loss(y_true, y_pred, normalize=False)
+
+    # No caso multilabel com indicadores de rótulos binários, onde o primeiro conjunto de rótulos [0,1] apresenta um erro: 
+
+zero_one_loss(np.array([[0, 1], [1, 1]]), np.ones((2, 2)))
+
+zero_one_loss(np.array([[0, 1], [1, 1]]), np.ones((2, 2)),  normalize=False)
 
 
+    ## Exemplos:
 
-
-
-
+    ## See Recursive feature elimination with cross-validation for an example of zero one loss usage to perform recursive feature elimination with cross-validation. (https://scikit-learn.org/stable/auto_examples/feature_selection/plot_rfe_with_cross_validation.html#sphx-glr-auto-examples-feature-selection-plot-rfe-with-cross-validation-py)
 
 
 ##### 3.3.2.18. Perda de pontuação Brier 
