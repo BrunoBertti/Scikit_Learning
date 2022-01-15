@@ -836,7 +836,43 @@ roc_auc_score(y, y_score, average=None)
 ##### 3.3.2.16. Compensação de erro de detecção (DET)
 
 
+    # A função det_curve calcula a curva da curva de compensação do erro de detecção (DET) [WikipediaDET2017]. Citando a Wikipédia:
 
+    # “Um gráfico de compensação de erro de detecção (DET) é um gráfico de taxas de erro para sistemas de classificação binária, representando taxa de rejeição falsa versus taxa de aceitação falsa. Os eixos x e y são dimensionados de forma não linear por seus desvios normais padrão (ou apenas por transformação logarítmica), produzindo curvas de compensação que são mais lineares do que as curvas ROC e usam a maior parte da área da imagem para destacar as diferenças de importância em a região crítica de operação.”
+
+    # As curvas DET são uma variação das curvas da característica operacional do receptor (ROC) onde a taxa de falso negativo é plotada no eixo y em vez da taxa de verdadeiro positivo. As curvas DET são comumente plotadas em escala de desvio normal por transformação com \phi^{-1} (com \phi sendo a função de distribuição cumulativa). As curvas de desempenho resultantes visualizam explicitamente a compensação dos tipos de erro para determinados algoritmos de classificação. Veja [Martin1997] para exemplos e motivação adicional.
+
+    # Esta figura compara as curvas ROC e DET de dois classificadores de exemplo na mesma tarefa de classificação: 
+
+        # https://scikit-learn.org/stable/auto_examples/model_selection/plot_det.html
+
+    # Propriedades:
+
+        # As curvas DET formam uma curva linear na escala de desvio normal se as pontuações de detecção forem normalmente (ou próximas da normal) distribuídas. Foi mostrado por [Navratil2007] que o inverso não é necessariamente verdadeiro e distribuições ainda mais gerais são capazes de produzir curvas DET lineares.
+
+        # A transformação de escala de desvio normal espalha os pontos de tal forma que um espaço de plotagem comparativamente maior é ocupado. Portanto, curvas com desempenho de classificação semelhante podem ser mais fáceis de distinguir em um gráfico DET.
+
+        # Com a taxa de falso negativo sendo “inversa” à taxa de verdadeiro positivo, o ponto de perfeição para curvas DET é a origem (em contraste com o canto superior esquerdo para curva ROC 
+
+
+    # Aplicações e limitações:
+
+        # As curvas DET são intuitivas para ler e, portanto, permitem uma avaliação visual rápida do desempenho de um classificador. Além disso, as curvas DET podem ser consultadas para análise de limiar e seleção de ponto de operação. Isso é particularmente útil se for necessária uma comparação de tipos de erro.
+
+        # Por outro lado, as curvas DET não fornecem sua métrica como um único número. Portanto, para avaliação automatizada ou comparação com outras tarefas de classificação, métricas como a área derivada sob a curva ROC podem ser mais adequadas. 
+
+    ## Exemplos:
+
+    ## See Detection error tradeoff (DET) curve for an example comparison between receiver operating characteristic (ROC) curves and Detection error tradeoff (DET) curves. (https://scikit-learn.org/stable/auto_examples/model_selection/plot_det.html#sphx-glr-auto-examples-model-selection-plot-det-py)
+
+
+    ## Referências:
+    
+    ## WikipediaDET2017 Wikipedia contributors. Detection error tradeoff. Wikipedia, The Free Encyclopedia. September 4, 2017, 23:33 UTC. Available at: https://en.wikipedia.org/w/index.php?title=Detection_error_tradeoff&oldid=798982054. Accessed February 19, 2018.
+
+    ## Martin1997 A. Martin, G. Doddington, T. Kamm, M. Ordowski, and M. Przybocki, The DET Curve in Assessment of Detection Task Performance, NIST 1997.
+
+    ## Navratil2007 J. Navractil and D. Klusacek, “On Linear DETs,” 2007 IEEE International Conference on Acoustics, Speech and Signal Processing - ICASSP ‘07, Honolulu, HI, 2007, pp. IV-229-IV-232.
 
 
 
