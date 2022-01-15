@@ -602,18 +602,265 @@ log_loss(y_true, y_pred)
 
 ##### 3.3.2.13. Coeficiente de correlação de Matthews
 
+    # A função matthews_corrcoef calcula o coeficiente de correlação de Matthew (MCC) para classes binárias. Citando a Wikipédia:
+
+    # “O coeficiente de correlação de Matthews é usado no aprendizado de máquina como uma medida da qualidade das classificações binárias (duas classes). Ele leva em conta os verdadeiros e falsos positivos e negativos e é geralmente considerado como uma medida equilibrada que pode ser usada mesmo que as classes sejam de tamanhos muito diferentes. O MCC é essencialmente um valor de coeficiente de correlação entre -1 e +1. Um coeficiente de +1 representa uma previsão perfeita, 0 uma previsão aleatória média e -1 uma previsão inversa. A estatística também é conhecida como coeficiente phi.”
+
+    # No caso binário (duas classes), tp, tf, fp e fn são respectivamente o número de verdadeiros positivos, verdadeiros negativos, falsos positivos e falsos negativos, o MCC é definido como 
+
+
+        # MCC = \frac{tp \times tn - fp \times fn}{\sqrt{(tp + fp)(tp + fn)(tn + fp)(tn + fn)}}.
+
+    # No caso multiclasse, o coeficiente de correlação de Matthews pode ser definido em termos de uma matriz_confusão C para K classes. Para simplificar a definição, considere as seguintes variáveis intermediárias: 
+
+        # t_k=\sum_{i}^{K} C_{ik} o número de vezes que a classe k realmente ocorreu,
+
+        # p_k=\sum_{i}^{K} C_{ki} o número de vezes que a classe k foi prevista,
+
+        # c=\sum_{k}^{K} C_{kk} o número total de amostras corretamente previstas,
+
+        # s=\sum_{i}^{K} \sum_{j}^{K} C_{ij} o número total de amostras. 
+
+    # Então o MCC multiclasse é definido como: 
+
+        # MCC = \frac{    c \times s - \sum_{k}^{K} p_k \times t_k}{\sqrt{    (s^2 - \sum_{k}^{K} p_k^2) \times    (s^2 - \sum_{k}^{K} t_k^2)}}
+
+    # Quando há mais de dois rótulos, o valor da MCC não varia mais entre -1 e +1. Em vez disso, o valor mínimo estará em algum lugar entre -1 e 0, dependendo do número e da distribuição de rótulos verdadeiros. O valor máximo é sempre +1.
+
+    # Aqui está um pequeno exemplo que ilustra o uso da função matthews_corrcoef: 
+
+from sklearn.metrics import matthews_corrcoef
+y_true = [+1, +1, +1, -1]
+y_pred = [+1, -1, +1, +1]
+matthews_corrcoef(y_true, y_pred)
+
+
+
 ##### 3.3.2.14. Matriz de confusão de vários rótulos
+
+    # A função multilabel_confusion_matrix calcula a matriz de confusão multilabel em termos de classe (padrão) ou amostra (samplewise=True) para avaliar a precisão de uma classificação. multilabel_confusion_matrix também trata dados multiclasse como se fossem multilabel, pois esta é uma transformação comumente aplicada para avaliar problemas multiclasse com métricas de classificação binária (como precisão, recall, etc.).
+
+    # Ao calcular a matriz de confusão multirrótulo C de classe, a contagem de verdadeiros negativos para a classe i é C_{i,0,0}, falsos negativos é C_{i,1,0}, verdadeiros positivos é C_{i,1,1 } e falsos positivos é C_{i,0,1}.
+
+    # Aqui está um exemplo demonstrando o uso da função multilabel_confusion_matrix com entrada de matriz de indicador multilabel: 
+
+
+import numpy as np
+from sklearn.metrics import multilabel_confusion_matrix
+y_true = np.array([[1, 0, 1],
+                   [0, 1, 0]])
+y_pred = np.array([[1, 0, 0],
+                   [0, 1, 1]])
+multilabel_confusion_matrix(y_true, y_pred)
+
+    # Ou uma matriz de confusão pode ser construída para os rótulos de cada amostra: 
+
+multilabel_confusion_matrix(y_true, y_pred, samplewise=True)
+
+    # Aqui está um exemplo demonstrando o uso da função multilabel_confusion_matrix com entrada multiclasse: 
+
+y_true = ["cat", "ant", "cat", "cat", "ant", "bird"]
+y_pred = ["ant", "ant", "cat", "cat", "ant", "cat"]
+multilabel_confusion_matrix(y_true, y_pred,
+                            labels=["ant", "bird", "cat"])
+
+
+    # Aqui estão alguns exemplos que demonstram o uso da função multilabel_confusion_matrix para calcular recall (ou sensibilidade), especificidade, queda e taxa de falha para cada classe em um problema com entrada de matriz de indicador multilabel.
+
+    # Calculando o recall (também chamado de taxa de verdadeiro positivo ou sensibilidade) para cada classe: 
+
+y_true = np.array([[0, 0, 1],
+                   [0, 1, 0],
+                   [1, 1, 0]])
+y_pred = np.array([[0, 1, 0],
+                   [0, 0, 1],
+                   [1, 1, 0]])
+mcm = multilabel_confusion_matrix(y_true, y_pred)
+tn = mcm[:, 0, 0]
+tp = mcm[:, 1, 1]
+fn = mcm[:, 1, 0]
+fp = mcm[:, 0, 1]
+tp / (tp + fn)
+
+    # Calculando a especificidade (também chamada de taxa de verdadeiro negativo) para cada classe: 
+
+tn / (tn + fp)
+
+    # Calculando a queda (também chamada de taxa de falsos positivos) para cada classe: 
+
+fp / (fp + tn)
+
+    # Calculando a taxa de falta (também chamada de taxa de falsos negativos) para cada classe: 
+
+fn / (fn + tp)
+
+
 
 ##### 3.3.2.15. Característica de operação do receptor (ROC)
 
+
+    # A função roc_curve calcula a curva característica de operação do receptor, ou curva ROC. Citando a Wikipédia:
+
+    # “Uma característica de operação do receptor (ROC), ou simplesmente curva ROC, é um gráfico que ilustra o desempenho de um sistema classificador binário à medida que seu limite de discriminação é variado. Ele é criado plotando a fração de verdadeiros positivos dos positivos (TPR = taxa de verdadeiros positivos) versus a fração de falsos positivos dos negativos (FPR = taxa de falsos positivos), em várias configurações de limite. TPR também é conhecido como sensibilidade, e FPR é um menos a especificidade ou taxa de verdadeiro negativo.”
+
+    # Essa função requer o valor binário verdadeiro e as pontuações alvo, que podem ser estimativas de probabilidade da classe positiva, valores de confiança ou decisões binárias. Aqui está um pequeno exemplo de como usar a função roc_curve: 
+
+import numpy as np
+from sklearn.metrics import roc_curve
+y = np.array([1, 1, 2, 2])
+scores = np.array([0.1, 0.4, 0.35, 0.8])
+fpr, tpr, thresholds = roc_curve(y, scores, pos_label=2)
+fpr
+tpr
+thresholds
+
+
+    # Esta figura mostra um exemplo de tal curva ROC: 
+
+        # https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
+
+
+    # A função roc_auc_score calcula a área sob a curva da característica de operação do receptor (ROC), que também é denotada por AUC ou AUROC. Ao calcular a área sob a curva roc, as informações da curva são resumidas em um número. Para obter mais informações, consulte o artigo da Wikipedia sobre AUC.
+
+    # Comparado a métricas como a precisão do subconjunto, a perda de Hamming ou a pontuação F1, o ROC não requer a otimização de um limite para cada rótulo. 
+
+
+
+
+
+
 ##### 3.3.2.15.1. Caso binário
+
+
+    # No caso binário, você pode fornecer as estimativas de probabilidade, usando o método classifier.predict_proba(), ou os valores de decisão sem limite fornecidos pelo método classifier.decision_function(). No caso de fornecer as estimativas de probabilidade, deve ser fornecida a probabilidade da classe com o “rótulo maior”. O “rótulo maior” corresponde a classifier.classes_[1] e, portanto, classifier.predict_proba(X)[:, 1]. Portanto, o parâmetro y_score é de tamanho (n_samples,). 
+
+from sklearn.datasets import load_breast_cancer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score
+X, y = load_breast_cancer(return_X_y=True)
+clf = LogisticRegression(solver="liblinear").fit(X, y)
+clf.classes_
+
+    # Podemos usar as estimativas de probabilidade correspondentes a clf.classes_[1].
+
+y_score = clf.predict_proba(X)[:, 1]
+roc_auc_score(y, y_score)
+
+
+
+    # Caso contrário, podemos usar os valores de decisão sem limite 
+
+roc_auc_score(y, clf.decision_function(X))
+
+
+
+
+
 
 ##### 3.3.2.15.2. Caso multiclasse
 
+    # A função roc_auc_score também pode ser usada na classificação multiclasse. Duas estratégias de média são suportadas atualmente: o algoritmo um contra um calcula a média das pontuações ROC AUC pareadas e o algoritmo um contra o resto calcula a média das pontuações ROC AUC para cada classe em relação a todas as outras classes. Em ambos os casos, os rótulos previstos são fornecidos em uma matriz com valores de 0 a n_classes, e as pontuações correspondem às estimativas de probabilidade de que uma amostra pertença a uma determinada classe. Os algoritmos OvO e OvR suportam a ponderação uniforme (média='macro') e por prevalência (média='ponderada').
+
+    # Algoritmo um contra um: Calcula a AUC média de todas as combinações possíveis de classes em pares. [HT2001] define uma métrica AUC multiclasse ponderada uniformemente: 
+
+
+        # \frac{1}{c(c-1)}\sum_{j=1}^{c}\sum_{k > j}^c (\text{AUC}(j | k) +
+        # \text{AUC}(k | j))
+
+    # onde c é o número de classes e \text{AUC}(j | k) é a AUC com classe j como classe positiva e classe k como classe negativa. Em geral, \text{AUC}(j | k) \neq \text{AUC}(k | j)) no caso multiclasse. Este algoritmo é usado definindo o argumento de palavra-chave multiclass como 'ovo' e average como 'macro'.
+
+    # A métrica AUC multiclasse [HT2001] pode ser estendida para ser ponderada pela prevalência: 
+
+        # \frac{1}{c(c-1)}\sum_{j=1}^{c}\sum_{k > j}^c p(j \cup k)(
+        # \text{AUC}(j | k) + \text{AUC}(k | j))
+
+    # onde c é o número de classes. Este algoritmo é usado definindo o argumento de palavra-chave multiclass como 'ovo' e average como 'weighted'. A opção 'ponderada' retorna uma média ponderada de prevalência conforme descrito em [FC2009].
+
+    # Algoritmo um contra o resto: Computa o AUC de cada classe em relação ao resto [PD2000]. O algoritmo é funcionalmente o mesmo que o caso multilabel. Para habilitar este algoritmo, defina o argumento de palavra-chave multiclass como 'ovr'. Assim como o OvO, o OvR suporta dois tipos de média: 'macro' [F2006] e 'ponderado' [F2001].
+
+    # Em aplicações onde uma alta taxa de falsos positivos não é tolerável, o parâmetro max_fpr de roc_auc_score pode ser usado para resumir a curva ROC até o limite determinado. 
+
+        # https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
+
+
+
 ##### 3.3.2.15.3. Estojo multi-rótulo
+
+    # Na classificação multi-rótulo, a função roc_auc_score é estendida pela média dos rótulos como acima. Nesse caso, você deve fornecer um y_score de forma (n_samples, n_classes). Assim, ao usar as estimativas de probabilidade, é preciso selecionar a probabilidade da classe com o maior rótulo para cada saída.
+     
+from sklearn.datasets import make_multilabel_classification
+from sklearn.multioutput import MultiOutputClassifier
+X, y = make_multilabel_classification(random_state=0)
+inner_clf = LogisticRegression(solver="liblinear", random_state=0)
+clf = MultiOutputClassifier(inner_clf).fit(X, y)
+y_score = np.transpose([y_pred[:, 1] for y_pred in clf.predict_proba(X)])
+roc_auc_score(y, y_score, average=None)
+
+    # E os valores de decisão não requerem tal processamento. 
+
+from sklearn.linear_model import RidgeClassifierCV
+clf = RidgeClassifierCV().fit(X, y)
+y_score = clf.decision_function(X)
+roc_auc_score(y, y_score, average=None)
+
+
+    
+    ## Exemplos:
+
+    ## See Receiver Operating Characteristic (ROC) for an example of using ROC to evaluate the quality of the output of a classifier. (https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html#sphx-glr-auto-examples-model-selection-plot-roc-py)
+
+    ## See Receiver Operating Characteristic (ROC) with cross validation for an example of using ROC to evaluate classifier output quality, using cross-validation. (https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc_crossval.html#sphx-glr-auto-examples-model-selection-plot-roc-crossval-py)
+
+    ## See Species distribution modeling for an example of using ROC to model species distribution. (https://scikit-learn.org/stable/auto_examples/applications/plot_species_distribution_modeling.html#sphx-glr-auto-examples-applications-plot-species-distribution-modeling-py)
+
+
+
+
+
+    ## Referências:
+
+    ## HT2001(1,2) Hand, D.J. and Till, R.J., (2001). A simple generalisation of the area under the ROC curve for multiple class classification problems. Machine learning, 45(2), pp.171-186. (http://link.springer.com/article/10.1023/A:1010920819831)
+
+    ## FC2009 Ferri, Cèsar & Hernandez-Orallo, Jose & Modroiu, R. (2009). An Experimental Comparison of Performance Measures for Classification. Pattern Recognition Letters. 30. 27-38. (https://www.math.ucdavis.edu/~saito/data/roc/ferri-class-perf-metrics.pdf)
+
+    ## PD2000 Provost, F., Domingos, P. (2000). Well-trained PETs: Improving probability estimation trees (Section 6.2), CeDER Working Paper #IS-00-04, Stern School of Business, New York University.
+
+    ## F2006 Fawcett, T., 2006. An introduction to ROC analysis. Pattern Recognition Letters, 27(8), pp. 861-874. (http://www.sciencedirect.com/science/article/pii/S016786550500303X)
+
+    ## F2001 Fawcett, T., 2001. Using rule sets to maximize ROC performance In Data Mining, 2001. Proceedings IEEE International Conference, pp. 131-138. (http://ieeexplore.ieee.org/document/989510/)
+
+
+
+
 
 ##### 3.3.2.16. Compensação de erro de detecção (DET)
 
+
+
+
+
+
+
+
+
+
 ##### 3.3.2.17. Zero uma perda
 
+
+
+
+
+
+
+
+
+
 ##### 3.3.2.18. Perda de pontuação Brier 
+
+
+
+
+
+
+
+
