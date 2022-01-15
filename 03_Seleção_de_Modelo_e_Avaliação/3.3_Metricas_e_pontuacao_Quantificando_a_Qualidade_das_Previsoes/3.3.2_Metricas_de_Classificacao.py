@@ -916,8 +916,47 @@ zero_one_loss(np.array([[0, 1], [1, 1]]), np.ones((2, 2)),  normalize=False)
 
 
 
+    # A função brier_score_loss calcula a pontuação de Brier para classes binárias [Brier1950]. Citando a Wikipédia:
+
+    # “A pontuação de Brier é uma função de pontuação adequada que mede a precisão das previsões probabilísticas. É aplicável a tarefas nas quais as previsões devem atribuir probabilidades a um conjunto de resultados discretos mutuamente exclusivos.”
+
+    # Esta função retorna o erro quadrático médio do resultado real y \in \{0,1\} e a estimativa de probabilidade prevista p = \operatorname{Pr}(y = 1) (predict_proba) conforme gerado por: 
+
+        # BS = \frac{1}{n_{\text{samples}}} \sum_{i=0}^{n_{\text{samples}} - 1}(y_i - p_i)^2
+
+
+    # A perda de pontuação de Brier também está entre 0 e 1 e quanto menor o valor (a diferença média quadrada é menor), mais precisa é a previsão.
+
+    # Aqui está um pequeno exemplo de uso desta função: 
+
+import numpy as np
+from sklearn.metrics import brier_score_loss
+y_true = np.array([0, 1, 1, 0])
+y_true_categorical = np.array(["spam", "ham", "ham", "spam"])
+y_prob = np.array([0.1, 0.9, 0.8, 0.4])
+y_pred = np.array([0, 1, 1, 0])
+brier_score_loss(y_true, y_prob)
+0.055
+brier_score_loss(y_true, 1 - y_prob, pos_label=0)
+0.055
+brier_score_loss(y_true_categorical, y_prob, pos_label="ham")
+0.055
+brier_score_loss(y_true, y_prob > 0.5)
+
+    # A pontuação de Brier pode ser usada para avaliar quão bem um classificador é calibrado. No entanto, uma menor perda de pontuação de Brier nem sempre significa uma melhor calibração. Isso porque, por analogia com a decomposição de viés-variância do erro quadrático médio, a perda do Brier score pode ser decomposta como a soma da perda de calibração e perda de refinamento [Bella2012]. A perda de calibração é definida como o desvio quadrado médio das probabilidades empíricas derivadas da inclinação dos segmentos ROC. A perda de refinamento pode ser definida como a perda ótima esperada medida pela área sob a curva de custo ótima. A perda de refinamento pode mudar independentemente da perda de calibração, portanto, uma perda de pontuação de Brier menor não significa necessariamente um modelo melhor calibrado. “Somente quando a perda de refinamento permanece a mesma, uma perda de pontuação de Brier menor sempre significa uma melhor calibração” [Bella2012], [Flach2008]. 
+
+
+    ## Exemplos:
+
+    ## See Probability calibration of classifiers for an example of Brier score loss usage to perform probability calibration of classifiers. (https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration.html#sphx-glr-auto-examples-calibration-plot-calibration-py)
 
 
 
 
+    ## Referências:
 
+    ## Brier1950 G. Brier, Verification of forecasts expressed in terms of probability, Monthly weather review 78.1 (1950) (ftp://ftp.library.noaa.gov/docs.lib/htdocs/rescue/mwr/078/mwr-078-01-0001.pdf)
+
+    ## Bella2012(1,2) Bella, Ferri, Hernández-Orallo, and Ramírez-Quintana “Calibration of Machine Learning Models” in Khosrow-Pour, M. “Machine learning: concepts, methodologies, tools and applications.” Hershey, PA: Information Science Reference (2012). (http://dmip.webs.upv.es/papers/BFHRHandbook2010.pdf)
+
+    ## Flach2008 Flach, Peter, and Edson Matsubara. “On classification, ranking, and probability estimation.” Dagstuhl Seminar Proceedings. Schloss Dagstuhl-Leibniz-Zentrum fr Informatik (2008). (https://drops.dagstuhl.de/opus/volltexte/2008/1382/)
