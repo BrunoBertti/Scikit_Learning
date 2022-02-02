@@ -4,7 +4,7 @@
 
     # A regressão logística é implementada em LogisticRegression. Esta implementação pode ajustar regressão logística binária, One-vs-Rest ou multinomial com regularização opcional l1, l2 ou Elastic-Net. 
 
-    ## OBS: A regularização é aplicada por padrão, o que é comum não aprendizado de máquina, mas não nas estatísticas. Outra vantagem da regularização é que ela melhora a estabilidade numérica. Nenhuma regularização equivale a definir C com um valor muito alto. 
+    ## OBS: A regularização é aplicada por padrão, o que é comum no aprendizado de máquina, mas não nas estatísticas. Outra vantagem da regularização é que ela melhora a estabilidade numérica. Nenhuma regularização equivale a definir C com um valor muito alto. 
 
     # Como um problema de otimização, a regressão logística penalizada de classe binária l2 minimiza a seguinte função de custo:
 
